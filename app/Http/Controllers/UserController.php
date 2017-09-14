@@ -32,7 +32,7 @@ class UserController extends Controller
 
 //   regex:/^.*(?=.{3,})(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[\d\X])(?=.*[!$#%]).*$/
     /**
-     * @rules(username="required|unique:users", password="required|min:6")
+     * @rules(username="required|unique:users|min:6", password="required|min:6")
      * @permissionSystem(displayName="actions.user_controller.register")
      * @description(return="added User|messages", optionalInputs="roles[list of role ids]", comment="api needs user properties and list of roles for creating user | note that list of roles are optional | you must send the role id's like [1|2|3]['|' character mentions comma]")
      */

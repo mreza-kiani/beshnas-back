@@ -26,6 +26,14 @@ use DateTime;
  */
 class Option extends BaseModel
 {
+    public static $personalityTypes = [
+        "mind" => ["introvert", "extrovert"],
+        "energy" => ["observant", "intuitive"],
+        "nature" => ["thinking", "feeling"],
+        "tactics" => ["judging", "prospecting"],
+        "identity" => ["assertive", "turbulent"],
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

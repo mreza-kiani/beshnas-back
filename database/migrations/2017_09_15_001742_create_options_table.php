@@ -20,6 +20,12 @@ class CreateOptionsTable extends Migration
             $table->foreign('question_id')->references('id')
                 ->on('questions')->onDelete('cascade');
 
+            $table->integer('mind')->nullable();
+            $table->integer('energy')->nullable();
+            $table->integer('nature')->nullable();
+            $table->integer('tactics')->nullable();
+            $table->integer('identity')->nullable();
+
             $table->timestamps();
         });
     }

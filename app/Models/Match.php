@@ -26,6 +26,7 @@ use DateTime;
  */
 class Match extends BaseModel
 {
+    public static $questionCounts = 10;
 
     public static $status = [
         "waiting",
@@ -37,6 +38,14 @@ class Match extends BaseModel
         "solo",
         "multi",
     ];
+
+    /**
+     * @return int
+     */
+    public static function getQuestionCounts(): int
+    {
+        return self::$questionCounts;
+    }
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
