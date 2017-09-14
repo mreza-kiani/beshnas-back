@@ -13,6 +13,9 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property DateTime created_at
  * @property DateTime updated_at
  *
+ * @property Match[] matches[]
+ * @property Answer[] answers[]
+ *
  * @method static User find (integer $id)
  *
  * Class User
@@ -37,4 +40,20 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function matches()
+    {
+        return $this->belongsToMany(Match::class, 'match_user', 'user_id', 'match_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function answers()
+    {
+        return $this->hasMany(Answer::class, 'user_id');
+    }
 }
