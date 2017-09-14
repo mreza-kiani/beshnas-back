@@ -39,12 +39,14 @@ class UserController extends Controller
     public function postRegister()
     {
         try {
+            $credentials = request()->only('username', 'password');
             $user = User::create([
                 'username' => request()->input('username'),
                 'password' => bcrypt(request()->input('password')),
             ]);
+            $token = JWTAuth::attempt($credentials);
             return response()->json(MessageFactory::create(
-                ['messages.user.user_added'], 200, compact('user')
+                ['messages.user.user_added'], 200, compact('user', 'token')
             ), 200);
         } catch (Exception $e) {
             return response()->json(MessageFactory::create(

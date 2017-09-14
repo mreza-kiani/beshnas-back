@@ -27,8 +27,8 @@ class JsonMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (!RequestService::isRequestAjax($request)) {
-            return response()->json(Action::withRequest($request)->getAction());
+        if (!RequestService::isRequestJson($request)) {
+            return response()->json(Action::withRequest($request));
         }
         return $next($request);
     }

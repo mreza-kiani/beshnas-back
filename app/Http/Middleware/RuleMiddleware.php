@@ -24,7 +24,7 @@ class RuleMiddleware
             $rules = $method->getAnnotation("rules")->getProperties();
             $validator = Validator::make($request->all(), $rules);
             if ($validator->fails()) {
-                if (RequestService::isRequestAjax($request)) {
+                if (RequestService::isRequestJson($request)) {
                     return response()->json(
                         MessageFactory::createWithValidationMessages(
                             $validator->messages()->toArray(),

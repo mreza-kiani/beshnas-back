@@ -25,8 +25,8 @@ class RequestService
         return $request->has($key);
     }
 
-    public static function isRequestAjax($request=null){
+    public static function isRequestJson($request=null){
         $request = $request==null ? request() : $request;
-        return $request->json();
+        return $request->isJson();
     }
 }
