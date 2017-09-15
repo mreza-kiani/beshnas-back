@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\Builder;
  */
 class Match extends BaseModel
 {
-    public static $questionCounts = 10;
+    public static $questionCounts = 2;
 
     protected $fillable = [
         'status', 'type'

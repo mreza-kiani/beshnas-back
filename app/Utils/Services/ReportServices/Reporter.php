@@ -111,9 +111,11 @@ abstract class Reporter
     public function formatReport()
     {
         return [
-            "progress" => number_format($this->progress),
-            "detail" => $this->report,
-            "personalityType" => $this->personalityType
+            "data" => [
+                "progress" => number_format($this->progress),
+                "detail" => $this->report,
+                "personalityType" => $this->personalityType
+            ]
         ];
     }
 
