@@ -27,11 +27,11 @@ use DateTime;
 class Option extends BaseModel
 {
     public static $personalityTypes = [
-        "mind" => ["introvert", "extrovert"],
-        "energy" => ["observant", "intuitive"],
-        "nature" => ["thinking", "feeling"],
-        "tactics" => ["judging", "prospecting"],
-        "identity" => ["assertive", "turbulent"],
+        "mind" => ["introvert" => 1, "extrovert" => 2],
+        "energy" => ["observant" => 1, "intuitive" => 2],
+        "nature" => ["thinking" => 1, "feeling" => 2],
+        "tactics" => ["judging" => 1, "prospecting" => 2],
+        "identity" => ["assertive" => 1, "turbulent" => 2],
     ];
 
     /**
