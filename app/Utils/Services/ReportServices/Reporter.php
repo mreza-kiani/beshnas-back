@@ -9,6 +9,7 @@
 namespace App\Utils\Services\ReportServices;
 
 use App\Models\Option;
+use Exception;
 
 abstract class Reporter
 {
@@ -17,6 +18,7 @@ abstract class Reporter
     private $progressCount;
     private $report;
     private $personalityType;
+    private $personalityCategories;
 
     protected $user;
     protected $match;
@@ -108,13 +110,36 @@ abstract class Reporter
         }
     }
 
+    public function setPersonalityCategories()
+    {
+        $this->personalityCategories = [];
+        $mappingCategories = [
+            "mind" => ["I" => "introvert", "E" => "extrovert"],
+            "energy" => ["S" => "observant", "N" => "intuitive"],
+            "nature" => ["T" => "thinking", "F" => "feeling"],
+            "tactics" => ["J" => "judging", "P" => "prospecting"],
+            "identity" => ["A" => "assertive", "T" => "turbulent"],
+        ];
+        $index = 0;
+        $type = str_split($this->personalityType);
+        foreach ($mappingCategories as $key => $mappingCategory) {
+            try{
+            $this->personalityCategories[$key] = trans('personality.'.$key .'.'.$mappingCategory[$type[$index]]);
+            } catch (Exception $e){
+                $this->personalityCategories[$key] = "?";
+            }
+            $index++;
+        }
+    }
+
     public function formatReport()
     {
         return [
             "data" => [
                 "progress" => number_format($this->progress),
                 "detail" => $this->report,
-                "personalityType" => $this->personalityType
+                "personalityType" => substr_replace($this->personalityType, "-", 4, 0),
+                "personalityCategories" => $this->personalityCategories
             ]
         ];
     }
@@ -125,6 +150,7 @@ abstract class Reporter
         $this->calcStats();
         $this->generateReport();
         $this->setPersonalityType();
+        $this->setPersonalityCategories();
         return $this->formatReport();
     }
 
