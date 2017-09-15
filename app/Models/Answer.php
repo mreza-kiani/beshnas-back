@@ -30,6 +30,10 @@ use DateTime;
  */
 class Answer extends BaseModel
 {
+    protected $fillable = [
+        "match_id", "user_id", "question_id", "option_id"
+    ];
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */

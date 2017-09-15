@@ -8,6 +8,7 @@
 
 namespace App\Models;
 use DateTime;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @property integer id
@@ -48,5 +49,17 @@ class Question extends BaseModel
     public function answers()
     {
         return $this->hasMany(Answer::class, 'question_id');
+    }
+
+    /**
+     * @param Builder $builder
+     * @param User $user
+     * @return Builder
+     */
+    public function scopeNotInUserQuestions($builder, $user)
+    {
+        return $builder->whereDoesntHave('answers', function ($query) use ($user){
+            $query->where('user_id', '=', $user->id);
+        });
     }
 }

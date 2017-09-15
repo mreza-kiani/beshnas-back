@@ -38,7 +38,7 @@ class SoloMatchController extends Controller
             $match = $user->getActiveSoloMatch();
             if (!is_null($match))
                 return response()->json(MessageFactory::create(
-                    ['messages.match.existing_match'], 200, compact('match')
+                    ['messages.match.existing_match'], 200, ["data" => $match]
                 ), 200);
 
             $match = Match::create([
@@ -48,11 +48,11 @@ class SoloMatchController extends Controller
 
             $match->users()->attach($user->id);
 
-            $questions = Question::inRandomOrder()->get()->take(Match::getQuestionCounts());
+            $questions = Question::inRandomOrder()->notInUserQuestions($user)->get()->take(Match::getQuestionCounts());
             $match->questions()->attach($questions->lists('id')->toArray());
 
             return response()->json(MessageFactory::create(
-                ['messages.match.match_added'], 200, compact('match')
+                ['messages.match.match_added'], 200, ["data" => $match]
             ), 200);
         } catch (Exception $e) {
             return response()->json(MessageFactory::create(
@@ -74,7 +74,9 @@ class SoloMatchController extends Controller
                 ['messages.match.match_has_finished'], 200
             ), 200);
         }
-        return $match->questions()->with('options')->get()->get($match->pivot->answered_questions);
+        return response()->json([
+            "data" => $match->questions()->with('options')->get()->get($match->pivot->answered_questions)
+        ]);
     }
 
     /**
