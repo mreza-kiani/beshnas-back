@@ -37,7 +37,7 @@ class AuthController extends Controller
     public function getReport()
     {
         $user = JWTAuth::parseToken()->authenticate();
-        return response()->json((new UserProgressReporter())->getReport($user), 200);
+        return response()->json((new UserProgressReporter($user))->getReport(), 200);
     }
 
     /**
