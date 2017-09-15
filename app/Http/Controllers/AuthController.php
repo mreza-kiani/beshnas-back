@@ -12,6 +12,7 @@ use App\Models\NotificationDevice;
 use App\Models\Tag;
 use App\Models\User;
 use App\Utils\Message\MessageFactory;
+use App\Utils\Services\ReportServices\UserProgressReporter;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -31,34 +32,12 @@ use App\Utils\Services\RoutineServices\DateService;
 class AuthController extends Controller
 {
     /**
-     * @rules(username="required", password="required")
-     * @permissionSystem(loginNeeded=false, displayName="actions.auth.login")
+     * @permissionSystem(loginNeeded=true, displayName="actions.auth.login")
      */
-    public function postLogin()
+    public function getReport()
     {
-        // grab credentials from the request
-        $credentials = request()->only('username', 'password');
-
-        try {
-            // attempt to verify the credentials and create a token for the user
-            if (!$token = JWTAuth::attempt($credentials)) {
-                return response()->json(MessageFactory::create(
-                    ['messages.auth.invalid_credentials'], 401
-                ), 401);
-            }
-        } catch (JWTException $e) {
-            // something went wrong whilst attempting to encode the token
-            return response()->json(MessageFactory::create(
-                ['messages.auth.token_creation_error'], 500
-            ), 500);
-        }
-
-        // all good so return the token
-        return response()->json(
-            MessageFactory::create([
-                'messages.auth.login_successful'
-            ], 200, compact('token')
-            ), 200);
+        $user = JWTAuth::parseToken()->authenticate();
+        return response()->json((new UserProgressReporter())->getReport($user), 200);
     }
 
     /**

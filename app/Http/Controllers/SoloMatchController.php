@@ -6,10 +6,10 @@ use App\Models\Answer;
 use App\Models\Match;
 use App\Models\Option;
 use App\Models\Question;
-use App\Models\User;
 use App\Utils\Message\MessageFactory;
+use App\Utils\Services\ReportServices\MatchReporter;
+use App\Utils\Services\ReportServices\UserProgressReporter;
 use Exception;
-use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 /**
@@ -110,5 +110,25 @@ class SoloMatchController extends Controller
         return response()->json(MessageFactory::create(
             ['messages.match.answer_has_booked'], 200
         ), 200);
+    }
+
+    /**
+     * @rules(match_id="required|exists:matches\,id")
+     * @permissionSystem(displayName="actions.solo_match_controller.report")
+     * @description(return="ReportObject", comment="api will get a match id and will return a ReportObject")
+     */
+    public function getReport()
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+        $match = Match::whereHas('users', function ($query) use ($user){
+            $query->whereId($user->id);
+        })->find(request('match_id'));
+
+        if (is_null($match))
+            return response()->json(MessageFactory::create(
+                ['messages.match.no_match_found'], 403
+            ), 403);
+
+        return response()->json((new MatchReporter($user, $match))->getReport(), 200);
     }
 }

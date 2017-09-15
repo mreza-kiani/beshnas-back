@@ -17,8 +17,8 @@ Route::any('api-documentation', function(){
     return 'this is api documentation ';
 });
 
-Route::controller('/user', 'UserController');
-Route::controller('/auth', 'AuthController');
+Route::controller('user', 'UserController');
+Route::controller('auth', 'AuthController');
 Route::controller('solo-match', 'SoloMatchController');
 
 Route::controller('/attach-file', '\\App\\Http\\Controllers\\AttachFileController');

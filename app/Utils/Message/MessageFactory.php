@@ -48,6 +48,37 @@ class MessageFactory
         return $json ? json_encode($data) : $data;
     }
 
+    /**
+     * @param string[] $messages
+     * @param int $code
+     * @param array $data
+     * @param bool $json
+     * @return array|string
+     */
+    public static function createForDummy($messages, $code, $data = [], $json = false)
+    {
+        $color = '';
+        $result["data"] = $data;
+        try {
+            $color = self::$errors[$code];
+        } catch (Exception $e) {
+            $color = 'red';
+        }
+        $resultMessages = [];
+        foreach ($messages as $message => $parameters) {
+            if (gettype($parameters) === "array")
+                $resultMessages[] = trans($message, $parameters);
+            else
+                $resultMessages[] = trans($parameters);
+        }
+        $result['message'] = [
+            'messages' => $resultMessages,
+            'color' => $color,
+            'code' => $code
+        ];
+        return $json ? json_encode($result) : $result;
+    }
+
     public static function createWithValidationMessages($messages, $code, $data = [], $json = false)
     {
         $resultArray = [];
