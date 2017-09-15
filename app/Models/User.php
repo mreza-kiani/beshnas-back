@@ -56,4 +56,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Answer::class, 'user_id');
     }
+
+    /**
+     * @return Match
+     */
+    public function getActiveSoloMatch()
+    {
+        return $this->matches()->withPivot(['answered_questions'])->type('solo')->status('playing')->first();
+    }
 }

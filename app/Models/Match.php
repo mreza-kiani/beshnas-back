@@ -8,10 +8,12 @@
 
 namespace App\Models;
 use DateTime;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * @property integer id
- * @property string text
+ * @property integer status
+ * @property integer type
  * @property DateTime created_at
  * @property DateTime updated_at
  *
@@ -28,15 +30,19 @@ class Match extends BaseModel
 {
     public static $questionCounts = 10;
 
+    protected $fillable = [
+        'status', 'type'
+    ];
+
     public static $status = [
-        "waiting",
-        "playing",
-        "finished",
+        "waiting" => 0,
+        "playing" => 1,
+        "finished" => 2,
     ];
 
     public static $type = [
-        "solo",
-        "multi",
+        "solo" => 1,
+        "multi" => 2,
     ];
 
     /**
@@ -60,7 +66,7 @@ class Match extends BaseModel
      */
     public function questions()
     {
-        return $this->belongsToMany(Question::class, 'question_user', 'match_id','question_id');
+        return $this->belongsToMany(Question::class, 'match_question', 'match_id','question_id');
     }
 
     /**
@@ -69,5 +75,25 @@ class Match extends BaseModel
     public function answers()
     {
         return $this->hasMany(Answer::class, 'match_id');
+    }
+
+    /**
+     * @param Builder $builder
+     * @param String $status
+     * @return Builder
+     */
+    public function scopeStatus($builder, $status)
+    {
+        return $builder->whereStatus(Match::$status[$status]);
+    }
+
+    /**
+     * @param Builder $builder
+     * @param String $type
+     * @return Builder
+     */
+    public function scopeType($builder, $type)
+    {
+        return $builder->whereType(Match::$type[$type]);
     }
 }
